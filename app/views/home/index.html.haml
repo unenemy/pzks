@@ -1,2 +1,9 @@
-%h1 Home#index
-%p Find me in app/views/home/index.html.haml
+= form_tag root_path do
+  = text_field_tag :expression, @expression
+  = submit_tag "PROCESS"
+%b Parsed result:
+%p= @parsed
+%p= @message
+%br
+%b Оптимизация соседних - и /
+%p= @result
