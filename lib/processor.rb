@@ -4,15 +4,11 @@ class Processor
     scope = ->(exp){
       i = 0
       while i < exp.size
-        #puts "scoping hard"
-        #puts i
         if HARD.include?(exp[i])
           j = i
           while HARD.include?(exp[j])
             j+=2
           end
-          #puts "FROM #{i-1} to #{j-1}"
-          #puts "FROM #{exp[i-1]} to #{exp[j-1]}"
           range_in_scope!(exp, i-1, j-1)
         end
         i+=1
@@ -24,6 +20,13 @@ class Processor
     }
     scope_in_scope[expression]
     expression
+  end
+
+  def zero_if_operation_in_scope(expression)
+    expression.unshift("0") if SOFT.include?(expression.first)
+    expression.each{|node|
+      zero_if_operation_in_scope(node) if node.is_a?(Array)
+    }
   end
 
   def normalize_scopes!(expression)
@@ -51,10 +54,8 @@ class Processor
     i = 0
     exp.each{|node| optimize_operations!(node, from_op, to_op) if node.is_a?(Array)}
     while i < exp.size
-      #puts i
       if exp[i] == from_op  && exp[i+2] == from_op
         operations = count_operations(exp, i, from_op)
-        #puts "OP count = #{operations}"
         exp = replace_scope(exp, i, from_op, to_op, operations)
         optimize_operations!(exp, from_op, to_op)
         break
@@ -65,11 +66,8 @@ class Processor
   end
 
   def replace_scope(exp, i, from, to, operations)
-    #puts "EXPRESSION #{exp}"
-    #puts "I = #{i}"
     scope = exp[i+1..i+operations*2-1]
     scope.map! {|x| x == from ? to : x }
-    #puts "SCOPE #{scope}"
     exp[i+1] = scope
     ((operations-1)*2).times { exp.delete_at(i+2) }
     exp
@@ -85,11 +83,7 @@ class Processor
   end
 
   def to_struct(expression)
-    puts "EXPRESSION #{expression.object_id}"
     result = expression.dup
-    puts "RESULT #{result.object_id}"
-    #puts result.class
-    #p result
 
     node_to_struct = ->(node){
       {
@@ -101,13 +95,11 @@ class Processor
     }
 
     array_to_struct = ->(exp){
-      #puts exp
       exp.each_with_index{|node, i|
         if node.is_a?(Array) 
           array_to_struct[node]
         else
           node = node_to_struct[node]
-          #puts node
           exp[i] = node
         end
       }

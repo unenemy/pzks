@@ -5,8 +5,9 @@ class HomeController < ApplicationController
       automat = Automat.new(@expression << "\n")
       @okay, @message, @result = automat.parse
       return unless @okay
-      @parsed = Marshal.load(Marshal.dump(@result))
       processor = Processor.new
+      processor.zero_if_operation_in_scope(@result)
+      @parsed = Marshal.load(Marshal.dump(@result))
       processor.scope_hard(@result)
       processor.normalize_scopes!(@result)
       processor.optimize_neibours(@result)
@@ -17,14 +18,6 @@ class HomeController < ApplicationController
       @pre_tree = Marshal.load(Marshal.dump(@tree))
       processor.build_tree(@tree)
       Grapher.write_graph(@tree.first, "graphe")
-      #g = GraphV
-      #iz.new( :G, :type => :digraph)
-
-      #hello = g.add_nodes("Hello")
-      #world = g.add_nodes("World")
-
-      #g.add_edges(hello, world)
-      #g.output(:png => "#{Rails.root}/public/images/graph.png")
     end
   end
 end
