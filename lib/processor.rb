@@ -190,6 +190,29 @@ class Processor
     }
   end
 
+  def numerate_tree(tree)
+    i = 1
+    numerate = ->(struct){
+      puts "STRUCT"
+      puts struct
+      puts struct.class
+      struct[:num] = i
+      i+=1
+      numerate[struct[:left]] if struct[:left]
+      numerate[struct[:right]] if struct[:right]
+    }
+    numerate[tree.first]
+  end
+
+  def deepness_for_tree(tree)
+    deep = ->(struct, d){
+      struct[:deepness] = d
+      deep[struct[:left], d+1] if struct[:left]
+      deep[struct[:right], d+1] if struct[:right]
+    }
+    deep[tree.first, 1]
+  end
+
   def build_tree(struct)
     while struct.size != 1
       p struct

@@ -5,3 +5,4 @@
       %li{:class => ("active" if @current_page == "index")}= link_to "Начало", root_url
       %li{:class => ("active" if @current_page == "com")}= link_to "Коммутативность", com_url
       %li{:class => ("active" if @current_page == "scopes")}= link_to "Вынесение за скобки", scopes_url
+      %li{:class => ("active" if @current_page == "pipeline")}= link_to "Погрузка в конвейер с постянным тактом", pipeline_url

@@ -20,6 +20,10 @@ class HomeController < ApplicationController
       processor.define_first_state(@tree)
       @pre_tree = Marshal.load(Marshal.dump(@tree))
       processor.build_tree(@tree)
+      processor.numerate_tree(@tree)
+      processor.deepness_for_tree(@tree)
+      puts "TREEEEEE"
+      p @tree
       Grapher.write_graph(@tree.first, "graphe")
     end
   end
@@ -100,4 +104,42 @@ class HomeController < ApplicationController
       @commutations = @sorted if @commutations.empty?
     end
   end
+
+  def pipeline
+    @current_page = "pipeline"
+    @expression = params[:expression]
+    @layers = params[:layers].to_i ||= 3
+    @scopes = []
+    @tree = []
+    @result = []
+    if @expression
+      automat = Automat.new(@expression << "\n")
+      @okay, @message, @result = automat.parse
+      @parsed = Marshal.load(Marshal.dump(@result))
+      return unless @okay
+      processor = Processor.new
+      processor.normalize_scopes!(@result)
+      processor.zero_if_operation_in_scope(@result)
+      @parsed = Marshal.load(Marshal.dump(@result))
+      processor.scope_hard(@result)
+      processor.normalize_scopes!(@result)
+      processor.optimize_neibours(@result)
+      @optimized = Marshal.load(Marshal.dump(@result))
+      @tree = processor.to_struct(@result)
+      processor.rescope_struct(@tree)
+      processor.define_first_state(@tree)
+      @pre_tree = Marshal.load(Marshal.dump(@tree))
+      processor.build_tree(@tree)
+      processor.numerate_tree(@tree)
+      processor.deepness_for_tree(@tree)
+      pipeline = Pipeline.new(@layers,@tree)
+      @result = pipeline.load
+      puts "result"
+      p @result
+      puts "TREEEEEE"
+      p @tree
+      Grapher.write_graph(@tree.first, "graphe")
+    end
+  end
+
 end

@@ -1,0 +1,15 @@
+= form_tag pipeline_path, :class => "navbar-form" do
+  %table
+    %tr
+      %td Выражение
+      %td{:style => "width:100%"}
+        = text_field_tag :expression, @expression, :style => "width:70%"
+    %tr
+      %td Количество слоев
+      %td
+        = text_field_tag :layers, @layers, :style => "width:10%"
+        = submit_tag "Погрузка всех вариантов" , :class => "btn"
+%p
+  %b Возможные варианты:
+- if @result.any?
+  = render "pipeline", :layers => @result[:layers], :pipeline => @result[:pipeline], :file => "graphe", :weight => @result[:weight]

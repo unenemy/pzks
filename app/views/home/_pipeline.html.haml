@@ -1,0 +1,21 @@
+%table.table.table-bordered.table-hover.table-condensed
+  %thead
+    %tr
+      %th #
+      - layers.times do |l|
+        %th Слой #{l}
+  %tbody
+    - pipeline.each_with_index do |line, i|
+      %tr
+        %td= (i+1)*weight
+        - line.each do |node|
+          %td
+            - if node[:value] == "empty"
+              = node[:value]
+            - else
+              #{node[:value]}
+              %strong (#{node[:num]})
+
+%b Дерево:
+%p
+  = image_tag "#{file}.png"
