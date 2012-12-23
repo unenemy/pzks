@@ -11,7 +11,7 @@ module Settings
     case operation
       when PLUS then 1
       when MINUS then 1
-      when DIV then 4
+      when DIV then 3
       when MULT then 2
       else 0
     end

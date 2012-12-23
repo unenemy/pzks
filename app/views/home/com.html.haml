@@ -1,0 +1,7 @@
+= form_tag com_path, :class => "navbar-form" do
+  = text_field_tag :expression, @expression, :style => "width:500px"
+  = submit_tag "КОМУТАТИВНОСТЬ", :class => "btn"
+%p
+  %b Возможные варианты:
+- @commutations.each do |com|
+  %p=com

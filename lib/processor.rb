@@ -1,5 +1,7 @@
 class Processor
   include Settings
+  include Comut
+  include Scoper
   def scope_hard(expression)
     scope = ->(exp){
       i = 0
@@ -23,7 +25,8 @@ class Processor
   end
 
   def zero_if_operation_in_scope(expression)
-    expression.unshift("0") if SOFT.include?(expression.first)
+    expression.unshift("0") if expression.first == MINUS
+    expression.delete_at(0) if expression.first == PLUS
     expression.each{|node|
       zero_if_operation_in_scope(node) if node.is_a?(Array)
     }

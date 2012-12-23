@@ -1,11 +1,14 @@
 class HomeController < ApplicationController
   def index
+    @current_page = "index"
     @expression = params[:expression]
     if @expression
       automat = Automat.new(@expression << "\n")
       @okay, @message, @result = automat.parse
+      @parsed = Marshal.load(Marshal.dump(@result))
       return unless @okay
       processor = Processor.new
+      processor.normalize_scopes!(@result)
       processor.zero_if_operation_in_scope(@result)
       @parsed = Marshal.load(Marshal.dump(@result))
       processor.scope_hard(@result)
@@ -18,6 +21,83 @@ class HomeController < ApplicationController
       @pre_tree = Marshal.load(Marshal.dump(@tree))
       processor.build_tree(@tree)
       Grapher.write_graph(@tree.first, "graphe")
+    end
+  end
+
+  def com
+    @current_page = "com"
+    @expression = params[:expression]
+    @commutations = []
+    if @expression
+      automat = Automat.new(@expression << "\n")
+      @okay, @message, @result = automat.parse
+      @parsed = Marshal.load(Marshal.dump(@result))
+      return unless @okay
+      processor = Processor.new
+      processor.normalize_scopes!(@result)
+      processor.zero_if_operation_in_scope(@result)
+      @parsed = Marshal.load(Marshal.dump(@result))
+      processor.scope_hard(@result)
+      processor.normalize_scopes!(@result)
+      #processor.optimize_neibours(@result)
+      @optimized = Marshal.load(Marshal.dump(@result))
+      @tree = processor.to_struct(@result)
+      processor.rescope_struct(@tree)
+      processor.count_scopes_weight(@tree)
+      processor.include_unaring(@tree)
+      p processor.build_node_string(@tree)
+      processor.sort_by_weight(@tree)
+      @sorted = [processor.build_node_string(@tree)]
+      puts @tree
+      puts @tree.size
+      p @tree.map{|x| x[:weight]}
+      p processor.build_node_string(@tree)
+      @commutations = processor.all_commutations(@tree).uniq.map{|x| x.first == "+" ? x[1..-1] : x}
+      @commutations = @sorted if @commutations.empty?
+    end
+  end
+
+  def scopes
+    @current_page = "scopes"
+    @expression = params[:expression]
+    @scopes = []
+    @tree = []
+    if @expression
+      automat = Automat.new(@expression << "\n")
+      @okay, @message, @result = automat.parse
+      @parsed = Marshal.load(Marshal.dump(@result))
+      return unless @okay
+      processor = Processor.new
+      processor.normalize_scopes!(@result)
+      processor.zero_if_operation_in_scope(@result)
+      @parsed = Marshal.load(Marshal.dump(@result))
+      processor.scope_hard(@result)
+      processor.normalize_scopes!(@result)
+      #processor.optimize_neibours(@result)
+      @optimized = Marshal.load(Marshal.dump(@result))
+      @tree = Scoping.to_struct(@result)
+      Scoping.rescope_struct(@tree, @tree)
+      Scoping.unaring(@tree)
+      Scoping.out_lists(@tree)
+      Scoping.out_them_all(@tree)
+      p @tree.map{|x| x[:out]}
+      #processor.rescope_struct(@tree)
+      #processor.init_solid(@tree)
+      #processor.reset_out_lists_for_nodes(@tree)
+      #processor.count_scopes_weight(@tree)
+      #processor.include_unaring(@tree)
+      #puts @tree
+      #puts processor.build_node_string(@tree)
+      #p @tree.size
+      return
+      processor.sort_by_weight(@tree)
+      @sorted = [processor.build_node_string(@tree)]
+      puts @tree
+      puts @tree.size
+      p @tree.map{|x| x[:weight]}
+      p processor.build_node_string(@tree)
+      @commutations = processor.all_commutations(@tree).uniq.map{|x| x.first == "+" ? x[1..-1] : x}
+      @commutations = @sorted if @commutations.empty?
     end
   end
 end

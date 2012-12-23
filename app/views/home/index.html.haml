@@ -1,12 +1,13 @@
-= form_tag root_path do
+= form_tag root_path, :class => "navbar-form" do
   = text_field_tag :expression, @expression
-  = submit_tag "PROCESS"
+  = submit_tag "Построить деревце", :class => "btn"
 %b Parsed result:
 %p= @parsed
 %p= @message
-%br
-%b Оптимизация соседних - и /
-%p= @optimized
-%b Дерево:
-%p
-  = image_tag "graphe.png"
+- if @okay
+  %br
+  %b Оптимизация соседних - и /
+  %p= @optimized
+  %b Дерево:
+  %p
+    = image_tag "graphe.png"

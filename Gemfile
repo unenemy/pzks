@@ -11,10 +11,14 @@ gem 'sqlite3'
 
 gem 'ruby-graphviz'
 
+gem 'libv8'
+gem 'less-rails'
+gem 'therubyracer'
 
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
+  gem 'twitter-bootstrap-rails'
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
 

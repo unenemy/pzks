@@ -1,0 +1,7 @@
+= form_tag scopes_path, :class => "navbar-form" do
+  = text_field_tag :expression, @expression, :style => "width:500px"
+  = submit_tag "Вынесние за скобочки" , :class => "btn"
+%p
+  %b Возможные варианты:
+- Scoping.out_them_all(@tree).each do |com|
+  %p=com
