@@ -1,9 +1,9 @@
 
 require "rvm/capistrano"
-set :rvm_ruby_string, 'ruby-1.9.3-p362@visitka'
+set :rvm_ruby_string, 'ruby-1.9.3-p392@pzks'
 set :rvm_type, :user
 
-set :application, "dev-dev.com"
+set :application, "pzks.dev-dev.com"
 set :app_process, "pzks"
 
 set :deploy_to, "/home/dev1002/www"
