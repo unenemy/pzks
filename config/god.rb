@@ -50,7 +50,7 @@ def unicorn_monitor(w, options)
   rails_env = options[:rails_env] || 'production'
 
   # unicorn needs to be run from the rails root
-  w.start = "cd #{options[:rails_root]} && #{options[:unicorn_bin]} -c #{options[:rails_root]}/config/unicorn.rb -E #{rails_env} -D"
+  w.start = "cd #{options[:rails_root]} && bundle exec #{options[:unicorn_bin]} -c #{options[:rails_root]}/config/unicorn.rb -E #{rails_env} -D"
 
   # QUIT gracefully shuts down workers
   w.stop = "kill -QUIT `cat #{options[:rails_root]}/tmp/pids/unicorn.pid`"
