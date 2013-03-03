@@ -11,5 +11,13 @@
         = submit_tag "Погрузка всех вариантов" , :class => "btn"
 %p
   %b Возможные варианты:
-- if @result.any?
-  = render "pipeline", :layers => @result[:layers], :pipeline => @result[:pipeline], :file => "graphe", :weight => @result[:weight]
+#accordion2.accordion
+  - @all.each_with_index do |pipe, i|
+    .accordion-group
+      .accourdion-heading
+        %a.accourdion-toggle{:data => {:toggle => "collapse", :parent => "#accordion2"}, :href => "#collapse_#{i}"}
+          = pipe[:expression]
+          время - #{pipe[:pipeline][:sum_weight]}
+      .accordion-body.collapse.in{:id => "collapse_#{i}"}
+        .accordion-inner
+          = render "pipeline", :layers => pipe[:pipeline][:layers], :pipeline => pipe[:pipeline][:pipeline], :file => pipe[:exp], :weight => pipe[:pipeline][:weight], :exp => pipe[:expression]

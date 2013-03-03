@@ -33,6 +33,25 @@ module Comut
     build_string(scope)
   end
 
+  def expression_clear_str(expression)
+    str = ""
+    exp_to_str = ->(exp){
+      exp.each_with_index do |node, i|
+        str << node[:unar] if node[:unar] && (i!=0 || node[:unar] == "-")
+        str << node[:hard] if i!=0 && node[:hard]
+        if node[:type] == :scope
+          str << "("
+          exp_to_str[node[:value]]
+          str << ")"
+        else
+          str << node[:value]
+        end
+      end
+    }
+    exp_to_str[expression]
+    str
+  end
+
   def build_string(scope)
     @built ||= ""
     scope.each do |node|
@@ -61,7 +80,7 @@ module Comut
         scope[w[:start]..w[:end]].permutation{|x|
           s = Marshal.load(Marshal.dump(scope))
           s[w[:start]..w[:end]] = x
-          @comutated << build_node_string(s)
+          @comutated << expression_clear_str(s) #build_node_string(s)
           comutate(s, w[:weight] + 1)
         }
       end

@@ -24,7 +24,7 @@ class Pipeline
   end
 
   def load_node
-    @queue.sort{|a,b| a[:deepness]<=>b[:deepness]}
+    @queue.sort!{|a,b| a[:deepness]<=>b[:deepness]}
     if @queue.first
       @pipeline << @queue.first
       @queue.shift
@@ -60,8 +60,8 @@ class Pipeline
   def collect_nodes
     collector = ->(struct){
       @nodes << struct
+      collector[struct[:right]] if struct[:right]
       collector[struct[:left]] if struct[:left]
-      collector[struct[:left]] if struct[:rigth]
     }
     collector[@exp.first]
   end
@@ -71,7 +71,12 @@ class Pipeline
   end
 
   def to_struct
-    weight = weight_of(@nodes.max{|x| weight_of(x[:value])}[:value])
+    sorted = @nodes.sort{|a,b| weight_of(a[:value])<=>weight_of(b[:value])}
+    weight = sorted.last[:value]
+    puts "SORTED #{sorted.map{|x| x[:value]}}"
+    puts "TRY TO FIND WEIGHT OF #{weight}"
+    weight = weight_of(weight)
+    puts "NODES!!!! #{@nodes.map{|x| x[:value]}}"
     result = []
     @pipeline.each_with_index do |line, i|
       @layers.times do |j|
@@ -84,6 +89,6 @@ class Pipeline
         x[i] = {:type => :empty, :value => "empty"} unless x[i]
       }
     }
-    {:layers => @layers, :pipeline => result, :weight => weight}
+    {:layers => @layers, :pipeline => result, :weight => weight, :sum_weight => weight*result.size}
   end
 end

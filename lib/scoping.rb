@@ -177,8 +177,8 @@ class Scoping
           scope[:to_out].each_with_index do |to_out, j|
             copy_out_scope = Marshal.load(Marshal.dump(scope))
             outed = do_out(copy_out_scope[:scope], to_out)
-            collect_outed[outed]
             outed_list << outed
+            collect_outed[outed]
           end
         end
       }
@@ -228,14 +228,17 @@ class Scoping
           })
           if index_to_delete == 0 and node[:value][1][:hard] == "/"
             node[:value][index_to_delete][:value] = "1"
+            node[:value][index_to_delete][:type] = :param
           else
             node[:value].delete_at(index_to_delete)
           end
         else
           node[:value].first[:value] = "1"
+          node[:value].first[:type] = :param
         end
       else
         node[:value] = "1"
+        node[:type] = :param
       end
     end
 

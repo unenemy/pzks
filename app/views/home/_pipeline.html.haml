@@ -1,3 +1,4 @@
+%b Погружение выражения:  #{exp}:
 %table.table.table-bordered.table-hover.table-condensed
   %thead
     %tr
@@ -16,6 +17,6 @@
               #{node[:value]}
               %strong (#{node[:num]})
 
-%b Дерево:
+%b Дерево для #{exp}:
 %p
   = image_tag "#{file}.png"

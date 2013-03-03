@@ -193,9 +193,9 @@ class Processor
   def numerate_tree(tree)
     i = 1
     numerate = ->(struct){
-      puts "STRUCT"
-      puts struct
-      puts struct.class
+      #puts "STRUCT"
+      #puts struct
+      #puts struct.class
       struct[:num] = i
       i+=1
       numerate[struct[:left]] if struct[:left]
