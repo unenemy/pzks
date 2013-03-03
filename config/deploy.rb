@@ -32,7 +32,7 @@ set :monitor_binary, "/home/dev1002/.rvm/bin/bootup_god"
 namespace :deploy do
   desc "Rename database.yml"
   task :rename_database_yml do
-    run "mv #{release_path}/config/database_production.yml #{release_path}/config/database.yml"
+    #run "mv #{release_path}/config/database_production.yml #{release_path}/config/database.yml"
   end
 
   task :init_folders do
