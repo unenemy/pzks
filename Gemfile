@@ -28,6 +28,11 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
+
+gem 'unicorn', '4.3.1'
+gem 'capistrano', '2.12.0'
+gem 'rvm-capistrano', '1.2.5'
+
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
