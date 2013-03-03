@@ -15,7 +15,7 @@ class Grapher
       }
       add_edge[tree, g.add_nodes(tree[:value].dup << tree.object_id.to_s, :label => "#{tree[:value]} (#{tree[:num]})")]
 
-      g.output(:png => "#{Rails.root}/app/assets/images/#{filename}.png")
+      g.output(:png => "#{Rails.root}/public/images/#{filename}.png")
     end
   end
 end
