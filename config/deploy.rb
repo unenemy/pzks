@@ -1,5 +1,6 @@
 
 require "rvm/capistrano"
+require "bundler/capistrano"
 set :rvm_ruby_string, 'ruby-1.9.3-p392@pzks'
 set :rvm_type, :user
 
